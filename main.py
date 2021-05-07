@@ -1,9 +1,15 @@
+from functools import lru_cache
 from typing import Optional
 
 from fastapi import FastAPI
 
+import settings
+
 app = FastAPI()
 
+@lru_cache
+def get_settings():
+    return settings.Settings
 
 @app.get("/")
 def read_root():

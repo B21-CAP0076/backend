@@ -4,13 +4,14 @@ from fastapi.security.oauth2 import (
     get_authorization_scheme_param,
 )
 
+
 class OAuth2PasswordBearerCookie(OAuth2):
     def __init__(
-        self,
-        tokenUrl: str,
-        scheme_name: str = None,
-        scopes: dict = None,
-        auto_error: bool = True,
+            self,
+            tokenUrl: str,
+            scheme_name: str = None,
+            scopes: dict = None,
+            auto_error: bool = True,
     ):
         if not scopes:
             scopes = {}
