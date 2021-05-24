@@ -1,15 +1,17 @@
-from typing import Optional
+import uvicorn
+from asyncio import get_event_loop
 
 from fastapi import FastAPI
 
+from config import settings
+from routers.user import router as user_router
+
+
 app = FastAPI()
+app.include_router(user_router)
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+# if __name__ == "__main__":
+#     loop = get_event_loop()
+#     config = uvicorn.Config(app=app, port=settings.SERVER_PORT, loop=loop)
+#     server = uvicorn.Server(config)
+#     loop.run_until_complete(server.serve())
