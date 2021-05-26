@@ -1,6 +1,4 @@
 fastapi
 uvicorn
-pydantic
-motor
 odmantic
 email-validator
