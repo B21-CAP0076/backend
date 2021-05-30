@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  mongodb:
+    image : mongo:latest
+    container_name: mongodb
+    volumes:
+      - <CHANGE_HERE>:/data/db
+      # example: - /home/user/dummy-place-to-store-my-db-file:/data/db
+      # it can be anything, just make sure that /home/user/dummy-place-to-store-my-db-file directory exists
+    ports:
+      - 27017:27017
