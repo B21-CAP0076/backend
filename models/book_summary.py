@@ -1,6 +1,7 @@
 from abc import ABC
-from datetime import datetime
 from typing import Optional
+from datetime import datetime
+
 
 from odmantic import Model, Reference
 from pydantic import BaseModel
@@ -17,6 +18,5 @@ class BookSummary(Model, ABC):
 
 # For partial update
 class BookSummaryUpdate(BaseModel):
-    reading_commitment: Optional[ReadingCommitment] = Reference()
     creation_date: Optional[datetime]
     summary: Optional[str]

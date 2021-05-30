@@ -1,23 +1,17 @@
 from pydantic import BaseSettings
 
 
-class GeneralSettings(BaseSettings):
+class Settings(BaseSettings):
     APP_NAME: str = "Habit"
-    DEBUG_MODE: bool = True
+    SERVER_HOST: str
+    SERVER_PORT: int
+    DB_NAME: str
+    DB_URL: str
+    CLIENT_ID: str
+    CLIENT_SECRET: str
 
-
-class ServerSettings(BaseSettings):
-    SERVER_HOST: str = "127.0.0.1"
-    SERVER_PORT: int = 8000
-
-
-class DatabaseSettings(BaseSettings):
-    DB_NAME: str = "habit"
-    DB_URL: str = "mongodb://localhost:27017/"
-
-
-class Settings(GeneralSettings, ServerSettings, DatabaseSettings):
-    pass
+    class Config:
+        env_file = ".env"
 
 
 settings = Settings()

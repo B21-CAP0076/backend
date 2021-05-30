@@ -1,17 +1,20 @@
-import uvicorn
-from asyncio import get_event_loop
-
 from fastapi import FastAPI
 
-from config import settings
 from routers.user import router as user_router
+from routers.hobby import router as hobby_router
+from routers.book import router as book_router
+from routers.author import router as author_router
+from routers.genre import router as genre_router
+from routers.reading_commitment import router as reading_commitment_router
+from routers.book_summary import router as book_summary_router
 
 
 app = FastAPI()
-app.include_router(user_router)
 
-# if __name__ == "__main__":
-#     loop = get_event_loop()
-#     config = uvicorn.Config(app=app, port=settings.SERVER_PORT, loop=loop)
-#     server = uvicorn.Server(config)
-#     loop.run_until_complete(server.serve())
+app.include_router(user_router)
+app.include_router(hobby_router)
+app.include_router(book_router)
+app.include_router(author_router)
+app.include_router(genre_router)
+app.include_router(reading_commitment_router)
+app.include_router(book_summary_router)

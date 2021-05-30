@@ -12,7 +12,6 @@ class Book(Model, ABC):
     title: str
     author_ids: List[ObjectId]
     genre_ids: List[ObjectId]
-    rating: float
 
 
 # For partial update
@@ -21,4 +20,3 @@ class BookUpdate(BaseModel):
     title: Optional[str]
     author_ids: Optional[List[ObjectId]]
     genre_ids: Optional[List[ObjectId]]
-    rating: Optional[float]

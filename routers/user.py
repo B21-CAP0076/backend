@@ -11,13 +11,14 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all_users(engine: AIOEngine = Depends(mongo_engine)):
-    users = await engine.find(User)
+async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
+    skip: int = 20 * (page - 1)
+    users = await engine.find(User, skip=skip, limit=20)
     return users
 
 
 @router.get("/{id}")
-async def get_user(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
+async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     user = await engine.find_one(User, User.id == id)
     if user is None:
         raise HTTPException(404)
@@ -25,13 +26,13 @@ async def get_user(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
 
 
 @router.put("/", response_model=User)
-async def create_user(user: User, engine: AIOEngine = Depends(mongo_engine)):
+async def create(user: User, engine: AIOEngine = Depends(mongo_engine)):
     await engine.save(user)
     return user
 
 
 @router.patch("/{id}", response_model=User)
-async def update_user(id: ObjectId, patch: UserUpdate, engine: AIOEngine = Depends(mongo_engine)):
+async def update(id: ObjectId, patch: UserUpdate, engine: AIOEngine = Depends(mongo_engine)):
     user = await engine.find_one(User, User.id == id)
     if user is None:
         raise HTTPException(404)
@@ -44,11 +45,9 @@ async def update_user(id: ObjectId, patch: UserUpdate, engine: AIOEngine = Depen
 
 
 @router.delete("/{id}")
-async def delete_user(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
+async def delete(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     user = await engine.find_one(User, User.id == id)
     if user is None:
         raise HTTPException(404)
     await engine.delete(user)
     return user
-
-

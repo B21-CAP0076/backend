@@ -1,4 +1,7 @@
 fastapi
 uvicorn
 odmantic
+fastapi-pagination
 email-validator
+google-auth
+python-dotenv
