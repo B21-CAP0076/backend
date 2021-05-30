@@ -50,6 +50,6 @@ sudo docker rmi habit
 ```
 4. Turn off the mongodb service that we ran using docker-compose by using the following command:
 ```
-sudo docker-compose down mongodb
+sudo docker-compose stop mongodb
 ```
 5. Additionally, if you want to, delete also the folder at the path you inserted inside the `Dockerfile`.
