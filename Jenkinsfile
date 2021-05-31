@@ -35,7 +35,7 @@ pipeline {
       when { branch 'canary' }
       agent {
         docker {
-              image 'gcr.io/cloud-builders/kubectl'
+              image 'gcr.io/google.com/cloudsdktool/cloud-sdk'
               args "-u root"
             }
       }
@@ -55,7 +55,7 @@ pipeline {
       when { branch 'master' }
       agent {
         docker {
-              image 'gcr.io/cloud-builders/kubectl'
+              image 'gcr.io/google.com/cloudsdktool/cloud-sdk'
               args "-u root"
             }
       }
