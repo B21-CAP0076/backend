@@ -33,6 +33,7 @@ pipeline {
       }
       steps {
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+          sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
             // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
@@ -49,6 +50,7 @@ pipeline {
       }
       steps{
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+          sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
           // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/production/*.yaml")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
