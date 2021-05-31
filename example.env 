@@ -1,0 +1,11 @@
+# IF PRODUCTION
+# DB_URL='mongodb://<username>:<password>@<ip>:27017/'
+# IF DEVELOPMENT
+DB_URL='mongodb://172.17.0.1:27017/'
+DB_NAME='habit' 
+
+SERVER_PORT=8080
+SERVER_HOST='127.0.0.1'
+
+CLIENT_ID="<client_id>"
+CLIENT_SECRET="<client_secret>"

@@ -23,7 +23,7 @@ To run this whole set of app on your local machine, you can do it manually or us
 sudo docker-compose up -d
 ```
 4. At this point, you have a mongodb server ready to serve our backend app. Next, let's go to create docker image for our backend app. 
-5. Go to root project directory (backend) where `Dockerfile` exists. Open it in you text editor and change the username, password, and IP accordingly. Next, we will build our `Dockerfile` into a docker image. We can do that by running the following command:
+5. Go to root project directory (backend) where `Dockerfile` exist. Make sure you have the `.env` file. The file `example.env` is atemplate for out `.env` file. Next, we will build our `Dockerfile` into a docker image. We can do that by running the following command:
 ```
 sudo docker build -t habit .
 ```
