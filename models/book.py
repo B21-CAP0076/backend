@@ -1,22 +1,25 @@
 from abc import ABC
 from typing import List, Optional
 
-from bson import ObjectId
+
 from odmantic import Model
 from pydantic import BaseModel
+
+from models.author import Author
+from models.genre import Genre
 
 
 # For get and put
 class Book(Model, ABC):
     img: str
     title: str
-    author_ids: List[ObjectId]
-    genre_ids: List[ObjectId]
+    authors: List[Author]
+    genres: List[Genre]
 
 
 # For partial update
-class BookUpdate(BaseModel):
-    img: Optional[str]
-    title: Optional[str]
-    author_ids: Optional[List[ObjectId]]
-    genre_ids: Optional[List[ObjectId]]
+# class BookUpdate(BaseModel):
+#     img: Optional[str]
+#     title: Optional[str]
+#     authors: Optional[List[Author]]
+#     genres: Optional[List[Book]]

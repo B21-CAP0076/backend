@@ -10,6 +10,6 @@ class Author(Model, ABC):
     name: str
 
 
-# For partial update
-class AuthorUpdate(BaseModel):
-    name: Optional[str]
+# # For partial update
+# class AuthorUpdate(BaseModel):
+#     name: Optional[str]

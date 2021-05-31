@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from odmantic import AIOEngine, ObjectId
 
 from db.mongodb import mongo_engine
-from models.genre import Genre, GenreUpdate
+from models.genre import Genre # GenreUpdate
 
 router = APIRouter(
     tags=["genre"],

@@ -1,5 +1,8 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from odmantic import AIOEngine, ObjectId
+from odmantic.query import QueryExpression
 
 from db.mongodb import mongo_engine
 
@@ -12,9 +15,26 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
+async def get_all(
+        page: int = 1,
+        owner_id: Optional[str] = None,
+        partner_id: Optional[str] = None,
+        engine: AIOEngine = Depends(mongo_engine)
+):
     skip: int = 20 * (page - 1)
-    reading_commitments = await engine.find(ReadingCommitment, skip=skip, limit=20)
+
+    queries = []
+    # Owner query
+    if owner_id:
+        qe = QueryExpression({'owner': ObjectId(owner_id)})
+        queries.append(qe)
+
+    # Partner query
+    if partner_id:
+        qe = QueryExpression({'partner.id': ObjectId(partner_id)})
+        queries.append(qe)
+
+    reading_commitments = await engine.find(ReadingCommitment, *queries, skip=skip, limit=20)
     return reading_commitments
 
 

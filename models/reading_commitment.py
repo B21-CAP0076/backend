@@ -1,7 +1,6 @@
 from abc import ABC
 from typing import Optional
 from datetime import datetime
-from bson import ObjectId
 
 from odmantic import Model, Reference
 from pydantic import BaseModel

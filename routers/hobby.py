@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from odmantic import AIOEngine, ObjectId
 
 from db.mongodb import mongo_engine
-from models.hobby import Hobby, HobbyUpdate
+from models.hobby import Hobby  # HobbyUpdate
 
 router = APIRouter(
     tags=["hobby"],
@@ -11,9 +11,8 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
-    skip: int = 20 * (page - 1)
-    hobbies = await engine.find(Hobby, skip=skip, limit=20)
+async def get_all(engine: AIOEngine = Depends(mongo_engine)):
+    hobbies = await engine.find(Hobby)
     return hobbies
 
 
@@ -23,7 +22,6 @@ async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     if hobby is None:
         raise HTTPException(404)
     return hobby
-
 
 # @router.put("/", response_model=Hobby)
 # async def create(hobby: Hobby, engine: AIOEngine = Depends(mongo_engine)):

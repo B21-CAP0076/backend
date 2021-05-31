@@ -10,6 +10,6 @@ class Hobby(Model, ABC):
     name: str
 
 
-# For partial update
-class HobbyUpdate(BaseModel):
-    name: Optional[str]
+# # For partial update
+# class HobbyUpdate(BaseModel):
+#     name: Optional[str]

@@ -1,8 +1,11 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from odmantic import AIOEngine, ObjectId
+from odmantic.query import QueryExpression
 
 from db.mongodb import mongo_engine
-from models.book import Book, BookUpdate
+from models.book import Book  # BookUpdate
 
 router = APIRouter(
     tags=["book"],
@@ -11,9 +14,30 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
-    skip: int = 20 * (page - 1)
-    books = await engine.find(Book, skip=skip, limit=20)
+async def get_all(
+        page: int = 1,
+        title: Optional[str] = None,
+        author: Optional[str] = None,
+        genre: Optional[str] = None,
+        engine: AIOEngine = Depends(mongo_engine)
+):
+    skip: int = 50 * (page - 1)
+
+    queries = []
+    if title:
+        qe = QueryExpression({'title': {'$eq': title}})
+        queries.append(qe)
+
+    if author:
+        qe = QueryExpression({'authors': {'$elemMatch': {'name': author}}})
+        queries.append(qe)
+
+    if genre:
+        qe = QueryExpression({'genres': {'$elemMatch': {'name': genre}}})
+        queries.append(qe)
+
+    books = await engine.find(Book, *queries, skip=skip, limit=50)
+
     return books
 
 
@@ -23,7 +47,6 @@ async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     if book is None:
         raise HTTPException(404)
     return book
-
 
 # @router.put("/", response_model=Book)
 # async def create(book: Book, engine: AIOEngine = Depends(mongo_engine)):

@@ -1,5 +1,8 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from odmantic import AIOEngine, ObjectId
+from odmantic.query import QueryExpression
 
 from db.mongodb import mongo_engine
 from models.book_summary import BookSummary, BookSummaryUpdate
@@ -11,9 +14,19 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
+async def get_all(
+        page: int = 1,
+        reading_commitment_id: Optional[str] = None,
+        engine: AIOEngine = Depends(mongo_engine)
+):
     skip: int = 20 * (page - 1)
-    book_summaries = await engine.find(BookSummary, skip=skip, limit=20)
+
+    queries = []
+    if reading_commitment_id:
+        qe = QueryExpression({'reading_commitment': ObjectId(reading_commitment_id)})
+        queries.append(qe)
+
+    book_summaries = await engine.find(BookSummary, *queries, skip=skip, limit=20)
     return book_summaries
 
 

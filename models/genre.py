@@ -10,6 +10,6 @@ class Genre(Model, ABC):
     name: str
 
 
-# For partial update
-class GenreUpdate(BaseModel):
-    name: Optional[str]
+# # For partial update
+# class GenreUpdate(BaseModel):
+#     name: Optional[str]

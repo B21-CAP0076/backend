@@ -1,4 +1,5 @@
 from abc import ABC
+from datetime import datetime
 from typing import List, Optional
 
 from bson import ObjectId
@@ -6,25 +7,30 @@ from odmantic import Model
 from pydantic import BaseModel, EmailStr
 
 from choice.education import EducationChoice
+from models.hobby import Hobby
+from models.book import Book
+from models.genre import Genre
 
 
 # For get and put
 class User(Model, ABC):
+    g_id: str
+    img: str
     username: str
     email: EmailStr
-    education: EducationChoice
-    hobby_ids: Optional[List[ObjectId]] = None
-    previous_books_ids: Optional[List[ObjectId]] = None
-    genre_preferences_ids: Optional[List[ObjectId]] = None
-    reading_clusters: Optional[int] = None
+    birthdate: Optional[datetime]
+    education: Optional[EducationChoice] = None
+    hobbies: Optional[List[Hobby]] = None
+    previous_books: Optional[List[Book]] = None
+    genre_preferences: Optional[List[Genre]] = None
+    reading_cluster: Optional[int] = None
 
 
 # For partial update
 class UserUpdate(BaseModel):
-    username: Optional[str]
-    email: Optional[EmailStr]
+    birthdate: Optional[datetime]
     education: Optional[EducationChoice]
-    hobby_ids: Optional[List[ObjectId]]
-    previous_books_ids: Optional[List[ObjectId]]
-    genre_preferences_ids: Optional[List[ObjectId]]
+    hobbies: Optional[List[Hobby]]
+    previous_books: Optional[List[Book]]
+    genre_preferences: Optional[List[Genre]]
     reading_clusters: Optional[int]
