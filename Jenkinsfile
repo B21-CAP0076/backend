@@ -16,7 +16,7 @@ pipeline {
     stage('Build and push image with Container Builder') {
       agent {
             docker {
-              image 'gcr.io/cloud-builders/gcloud'
+              image 'gcr.io/google.com/cloudsdktool/cloud-sdk'
               args "-u root"
             }
       }
@@ -34,7 +34,10 @@ pipeline {
       // Canary branch
       when { branch 'canary' }
       agent {
-        docker { image 'gcr.io/cloud-builders/kubectl' }
+        docker {
+              image 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+              args "-u root"
+            }
       }
       steps {
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY2')]) {
@@ -51,7 +54,10 @@ pipeline {
       // Production branch
       when { branch 'master' }
       agent {
-        docker { image 'gcr.io/cloud-builders/kubectl' }
+        docker {
+              image 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+              args "-u root"
+            }
       }
       steps{
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY3')]) {
