@@ -4,8 +4,8 @@ pipeline {
     PROJECT = "b21-cap0076"
     APP_NAME = "habit"
     BE_SVC_NAME = "${APP_NAME}-backend"
-    CLUSTER = "jenkins-cd"
-    CLUSTER_ZONE = "asia-southeast2-a"
+    CLUSTER = "backend-cluster"
+    CLUSTER_ZONE = "asia-southeast1-b"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
     JENKINS_CRED = "${PROJECT}"
   }
