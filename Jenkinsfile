@@ -53,7 +53,6 @@ spec:
         container('kubectl') {
           // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
-          sh("echo Deploying with env: $(cat .env)")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/canary', credentialsId: env.JENKINS_CRED, verifyDeployments: true])
           sh("echo http://`kubectl --namespace=production get service/${BE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${BE_SVC_NAME}")
@@ -67,7 +66,6 @@ spec:
         container('kubectl') {
         // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/production/*.yaml")
-          sh("echo Deploying with env: $(cat .env)")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/production', credentialsId: env.JENKINS_CRED, verifyDeployments: true])
           sh("echo http://`kubectl --namespace=production get service/${BE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${BE_SVC_NAME}")
