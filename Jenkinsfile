@@ -11,7 +11,6 @@ pipeline {
   }
 
   agent none
-  }
   stages {
     stage('Build and push image with Container Builder') {
       agent {
