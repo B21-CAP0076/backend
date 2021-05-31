@@ -10,11 +10,13 @@ pipeline {
     JENKINS_CRED = "${PROJECT}"
   }
 
-  agent none
   stages {
     stage('Build and push image with Container Builder') {
       agent {
-            docker { image 'gcr.io/cloud-builders/gcloud' }
+            docker {
+              image 'gcr.io/cloud-builders/gcloud'
+              args "-u root"
+            }
       }
       steps {
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY1')]) {
