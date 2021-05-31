@@ -41,8 +41,7 @@ spec:
     stage('Build and push image with Container Builder') {
       steps {
         container('gcloud') {
-          sh("gsutil cp gs://habit-env-bucket/prod-env")
-          sh("mv prod-env .env")
+          sh("gsutil cp gs://habit-env-bucket/prod-env .env")
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
