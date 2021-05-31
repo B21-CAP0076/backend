@@ -17,7 +17,8 @@ pipeline {
             docker { image 'gcr.io/cloud-builders/gcloud' }
       }
       steps {
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY1')]) {
+          sh("echo GC_KEY:${GC_KEY1}")
           sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
           sh("gsutil cp gs://habit-env-bucket/prod-env .env")
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
@@ -32,8 +33,8 @@ pipeline {
         docker { image 'gcr.io/cloud-builders/kubectl' }
       }
       steps {
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
-          sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY2')]) {
+          sh("gcloud auth activate-service-account --key-file=${GC_KEY2}")
             // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
@@ -49,8 +50,8 @@ pipeline {
         docker { image 'gcr.io/cloud-builders/kubectl' }
       }
       steps{
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
-          sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY3')]) {
+          sh("gcloud auth activate-service-account --key-file=${GC_KEY3}")
           // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/production/*.yaml")
           step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
