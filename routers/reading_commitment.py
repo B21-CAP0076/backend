@@ -17,8 +17,9 @@ router = APIRouter(
 @router.get("/")
 async def get_all(
         page: int = 1,
-        owner_id: Optional[str] = None,
-        partner_id: Optional[str] = None,
+        owner_id: Optional[ObjectId] = None,
+        partner_id: Optional[ObjectId] = None,
+        owner_reading_cluster: Optional[int] = None,
         engine: AIOEngine = Depends(mongo_engine)
 ):
     skip: int = 20 * (page - 1)
@@ -26,12 +27,16 @@ async def get_all(
     queries = []
     # Owner query
     if owner_id:
-        qe = QueryExpression({'owner': ObjectId(owner_id)})
+        qe = QueryExpression({'owner': owner_id})
         queries.append(qe)
 
     # Partner query
     if partner_id:
-        qe = QueryExpression({'partner.id': ObjectId(partner_id)})
+        qe = QueryExpression({'partner.id': partner_id})
+        queries.append(qe)
+
+    if owner_reading_cluster:
+        qe = QueryExpression({'owner.reading_cluster': owner_reading_cluster})
         queries.append(qe)
 
     reading_commitments = await engine.find(ReadingCommitment, *queries, skip=skip, limit=20)

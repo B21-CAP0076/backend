@@ -5,7 +5,7 @@ from odmantic import AIOEngine, ObjectId
 from odmantic.query import QueryExpression
 
 from db.mongodb import mongo_engine
-from models.book import Book  # BookUpdate
+from models.book import Book
 
 router = APIRouter(
     tags=["book"],
@@ -47,30 +47,3 @@ async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     if book is None:
         raise HTTPException(404)
     return book
-
-# @router.put("/", response_model=Book)
-# async def create(book: Book, engine: AIOEngine = Depends(mongo_engine)):
-#     await engine.save(book)
-#     return book
-#
-#
-# @router.patch("/{id}", response_model=Book)
-# async def update(id: ObjectId, patch: BookUpdate, engine: AIOEngine = Depends(mongo_engine)):
-#     book = await engine.find_one(Book, Book.id == id)
-#     if book is None:
-#         raise HTTPException(404)
-#
-#     patch_dict = patch.dict(exclude_unset=True)
-#     for name, value in patch_dict.items():
-#         setattr(book, name, value)
-#     await engine.save(book)
-#     return book
-#
-#
-# @router.delete("/{id}")
-# async def delete(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
-#     book = await engine.find_one(Book, Book.id == id)
-#     if book is None:
-#         raise HTTPException(404)
-#     await engine.delete(book)
-#     return book

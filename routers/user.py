@@ -1,6 +1,8 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.openapi.models import OAuthFlowImplicit, OAuthFlows
+from fastapi.security.oauth2 import OAuth2
 from odmantic import AIOEngine, ObjectId
 from odmantic.query import QueryExpression
 
@@ -18,24 +20,20 @@ router = APIRouter(
 
 
 @router.post("/gauth")
-async def gauth(token: str, engine: AIOEngine = Depends(mongo_engine)):
+async def gauth(req: Request, engine: AIOEngine = Depends(mongo_engine)):
     try:
-        id_info = id_token.verify_oauth2_token(token, requests.Request(), settings.CLIENT_ID)
+        id_info = id_token.verify_oauth2_token(req.query_params["token"], requests.Request(), settings.CLIENT_ID)
         user_id = id_info["sub"]
 
-        user = await engine.find_one(User, User.g_id == user_id)
+        user = await engine.find_one(User, User.gid == user_id)
         if user is None:
-            username = id_info["name"]
+            name = id_info["name"]
             email = id_info["email"]
-            img = id_info["picture"]
+            picture = id_info["picture"]
 
-            new_user = User(
-                g_id=user_id,
-                img=img,
-                username=username,
-                email=email
-            )
+            new_user = User(gid=user_id, name=name, email=email, picture=picture)
             await engine.save(new_user)
+
             return new_user
 
         # old user

@@ -1,8 +1,6 @@
 from abc import ABC
-from datetime import datetime
 from typing import List, Optional
 
-from bson import ObjectId
 from odmantic import Model
 from pydantic import BaseModel, EmailStr
 
@@ -14,11 +12,11 @@ from models.genre import Genre
 
 # For get and put
 class User(Model, ABC):
-    g_id: str
-    img: str
-    username: str
+    gid: str
+    picture: str
+    name: str
     email: EmailStr
-    birthdate: Optional[datetime]
+    age: Optional[int] = None
     education: Optional[EducationChoice] = None
     hobbies: Optional[List[Hobby]] = None
     previous_books: Optional[List[Book]] = None
@@ -28,7 +26,7 @@ class User(Model, ABC):
 
 # For partial update
 class UserUpdate(BaseModel):
-    birthdate: Optional[datetime]
+    age: Optional[int]
     education: Optional[EducationChoice]
     hobbies: Optional[List[Hobby]]
     previous_books: Optional[List[Book]]

@@ -1,9 +1,7 @@
 from abc import ABC
-from typing import List, Optional
-
+from typing import List
 
 from odmantic import Model
-from pydantic import BaseModel
 
 from models.author import Author
 from models.genre import Genre
@@ -15,11 +13,3 @@ class Book(Model, ABC):
     title: str
     authors: List[Author]
     genres: List[Genre]
-
-
-# For partial update
-# class BookUpdate(BaseModel):
-#     img: Optional[str]
-#     title: Optional[str]
-#     authors: Optional[List[Author]]
-#     genres: Optional[List[Book]]

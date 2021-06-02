@@ -19,6 +19,3 @@ class ReadingCommitment(Model, ABC):
 
 class ReadingCommitmentUpdate(BaseModel):
     partner: Optional[User]
-    creation_date: Optional[datetime]
-    end_date: Optional[datetime]
-    book: Optional[Book]
