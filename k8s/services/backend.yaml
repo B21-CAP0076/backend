@@ -4,6 +4,7 @@ metadata:
   name: habit-backend
 spec:
   type: LoadBalancer
+  loadBalancerIP: "34.126.96.253"
   ports:
   - name: http
     port: 8080

@@ -3,3 +3,4 @@ venv
 .idea
 setup_env.sh
 .env
+env_file
