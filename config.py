@@ -10,8 +10,6 @@ class Settings(BaseSettings):
     DB_URL: str
     CLIENT_ID: str
     CLIENT_SECRET: str
-    DB_USER_COLLECTION: str
-    SECRET_KEY: str
 
     class Config:
         env_file = ".env"
