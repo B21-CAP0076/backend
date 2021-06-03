@@ -2,7 +2,7 @@
 
 ## What is this project about?
 ```
-TODO BY PROJECT MANAGER
+TODO BY PROJECT MANAGER -> Setiaki
 ```
 
 ## Who are we?
