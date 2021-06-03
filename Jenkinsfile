@@ -22,7 +22,7 @@ pipeline {
       }
       steps {
         withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
-          sh("echo GC_KEY:${GC_KEY1}")
+          sh("echo GC_KEY:${GC_KEY}")
           sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY} --project=${PROJECT}")
           sh("gsutil cp gs://habit-env-bucket/prod-env .env")
           sh("chown cloudsdk:cloudsdk .env")
@@ -48,7 +48,12 @@ pipeline {
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           sh("gcloud container clusters get-credentials backend-cluster --zone asia-southeast1-b --project b21-cap0076")
           sh("kubectl set image deployment habit-backend-canary *=${IMAGE_TAG} -n production")
-          sh("kubectl rollout status deployment habit-backend-canary -n production")
+          try {
+            sh("kubectl rollout status deployment habit-backend-canary -n production")
+          } catch(e) {
+            sh("kubectl rollout undo deployment habit-backend-canary -n production")
+            throw e
+          }
         }
       }
     }
@@ -68,7 +73,12 @@ pipeline {
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           sh("gcloud container clusters get-credentials backend-cluster --zone asia-southeast1-b --project b21-cap0076")
           sh("kubectl set image deployment habit-backend-production *=${IMAGE_TAG} -n production")
-          sh("kubectl rollout status deployment habit-backend-production -n production")
+          try {
+            sh("kubectl rollout status deployment habit-backend-production -n production")
+          } catch(e) {
+            sh("kubectl rollout undo deployment habit-backend-production -n production")
+            throw e
+          }
         }
       }
     }
