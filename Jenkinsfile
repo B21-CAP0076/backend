@@ -21,9 +21,9 @@ pipeline {
             }
       }
       steps {
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY1')]) {
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
           sh("echo GC_KEY:${GC_KEY1}")
-          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY1} --project=${PROJECT}")
+          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY} --project=${PROJECT}")
           sh("gsutil cp gs://habit-env-bucket/prod-env .env")
           sh("chown cloudsdk:cloudsdk .env")
           sh("echo '' > .gitignore")
@@ -42,8 +42,8 @@ pipeline {
             }
       }
       steps {
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY2')]) {
-          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY2} --project=${PROJECT}")
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY} --project=${PROJECT}")
             // Change deployed image in canary to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           sh("gcloud container clusters get-credentials backend-cluster --zone asia-southeast1-b --project b21-cap0076")
@@ -62,8 +62,8 @@ pipeline {
             }
       }
       steps{
-        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY3')]) {
-          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY2} --project=${PROJECT}")
+        withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+          sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY} --project=${PROJECT}")
             // Change deployed image in production to the one we just built
           sh("sed -i.bak 's#gcr.io/b21-cap0076/habit:1.0.0#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
           sh("gcloud container clusters get-credentials backend-cluster --zone asia-southeast1-b --project b21-cap0076")
