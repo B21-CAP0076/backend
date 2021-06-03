@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     CLIENT_SECRET: str
 
     class Config:
-        env_file = ".env"
+        env_file = "env_file"
 
 
 settings = Settings()
