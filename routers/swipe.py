@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.post("/")
 async def swipe(
         commitment_1_id: ObjectId,
         commitment_2_id: ObjectId,
