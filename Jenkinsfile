@@ -26,6 +26,8 @@ pipeline {
           sh("gcloud auth activate-service-account 346784273889-compute@developer.gserviceaccount.com --key-file ${GC_KEY1} --project=${PROJECT}")
           sh("gsutil cp gs://habit-env-bucket/prod-env .env")
           sh("cat .env")
+          sh("pwd")
+          sh("ls -la")
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
         
