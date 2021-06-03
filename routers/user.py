@@ -44,6 +44,12 @@ async def gauth(req: Request, engine: AIOEngine = Depends(mongo_engine)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to validate Google login")
 
 
+@router.put("/", response_model=User)
+async def create(user: User, engine: AIOEngine = Depends(mongo_engine)):
+    await engine.save(user)
+    return user
+
+
 @router.get("/")
 async def get_all(
         page: int = 1,
