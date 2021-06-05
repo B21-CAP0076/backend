@@ -11,8 +11,9 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(engine: AIOEngine = Depends(mongo_engine)):
-    genres = await engine.find(Genre)
+async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
+    skip: int = 50 * (page - 1)
+    genres = await engine.find(Genre, skip=skip, limit=50)
     return genres
 
 

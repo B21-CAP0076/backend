@@ -5,6 +5,7 @@ from db.mongodb import mongo_engine
 from models.swipe import Swipe
 from models.reading_commitment import ReadingCommitment
 from choice.swipe import SwipeState, SwipeStatus
+from routers.user import oauth2_scheme
 
 router = APIRouter(
     tags=["swipe"],
@@ -17,13 +18,14 @@ async def swipe(
         commitment_1_id: ObjectId,
         commitment_2_id: ObjectId,
         state: SwipeState,
-        engine: AIOEngine = Depends(mongo_engine)
+        engine: AIOEngine = Depends(mongo_engine),
+        token: str = Depends(oauth2_scheme),
 ):
     try:
         swipe_obj = await engine.find_one(
             Swipe,
-            Swipe.commitment_1.id == commitment_1_id,
-            Swipe.commitment_2.id == commitment_2_id
+            Swipe.commitment_1 == commitment_1_id,
+            Swipe.commitment_2 == commitment_2_id
         )
 
         commitment_1 = await engine.find_one(ReadingCommitment, ReadingCommitment.id == commitment_1_id)
@@ -45,5 +47,6 @@ async def swipe(
 
             await engine.delete(swipe_obj)
             return swipe_obj
+
     except:
-        raise HTTPException(404)
+        raise HTTPException(400, detail="Invalid path/query parameters")

@@ -12,10 +12,9 @@ from models.genre import Genre
 
 # For get and put
 class User(Model, ABC):
-    gid: str
+    email: EmailStr
     picture: str
     name: str
-    email: EmailStr
     age: Optional[int] = None
     education: Optional[EducationChoice] = None
     hobbies: Optional[List[Hobby]] = None
@@ -31,4 +30,4 @@ class UserUpdate(BaseModel):
     hobbies: Optional[List[Hobby]]
     previous_books: Optional[List[Book]]
     genre_preferences: Optional[List[Genre]]
-    reading_clusters: Optional[int]
+    reading_cluster: Optional[int]

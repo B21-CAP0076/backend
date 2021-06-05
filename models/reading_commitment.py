@@ -17,5 +17,6 @@ class ReadingCommitment(Model, ABC):
     book: Book = Reference()
 
 
-class ReadingCommitmentUpdate(BaseModel):
-    partner: Optional[User]
+class ReadingCommitmentCreate(BaseModel):
+    end_date: datetime
+    book: Book
