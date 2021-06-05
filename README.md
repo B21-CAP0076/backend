@@ -2,17 +2,26 @@
 
 ## What is this project about?
 ```
-TODO BY PROJECT MANAGER -> Setiaki
+This repository is the backend of our habit app. The technology used is listed below:
+1. Software stack: **Python-FastAPI**. This is a a REST framework that can make backend endpoints become easier to develop.
+2. Database: **mongodb**. Mongodb is a non-sql database, we use JSON-like data entry to store all of our user data.
+3. Machine Learning: **TODO: describe**
+4. Cloud: **jenkins, k8s, many more**. We mirror this repository to Google Source Repository and use Jenkins to manage our CD. For now, only `canary` and `master` branch will be deployed to GKE upon running `push`.
 ```
 
 ## Who are we?
 ```
-Setiaki
-Hira
-Navi
-Alka
+Setiaki - A0101049@bangkit.academy
+Hira - A0101023@bangkit.academy
+Navi - M0101012@bangkit.academy
+Alka - M0101050@bangkit.academy
 Greg - C0101013@bangkit.academy
 ```
+
+## Endpoints
+Backend endpoint: http://34.126.96.253:8080/docs <br/>
+(Coming soon, with domain: http://habitbangkit.tech:8080/docs) <br/>
+**Note:** This is insecure because we are still in development, in the future we will close the /docs endpoint and add many other ways of access control and encryption.
 
 ## LOCAL Setup: how to run
 To run this whole set of app on your local machine, you can do it manually or using container technology. This setup will guide you on running this app using the container technology on Ubuntu 20.04. 
