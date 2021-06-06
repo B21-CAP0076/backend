@@ -19,9 +19,9 @@ Greg - C0101013@bangkit.academy
 ```
 
 ## Endpoints
-Backend endpoint: http://34.126.96.253:8080/docs <br/>
-(Coming soon, with domain: http://habitbangkit.tech:8080/docs) <br/>
-**Note:** This is insecure because we are still in development, in the future we will close the /docs endpoint and add many other ways of access control and encryption.
+Backend endpoint docs: http://habitbangkit.tech:8080/docs <br/>
+Alternative docs: http://habitbangkit.tech:8080/redoc <br/>
+
 
 ## LOCAL Setup: how to run
 To run this whole set of app on your local machine, you can do it manually or using container technology. This setup will guide you on running this app using the container technology on Ubuntu 20.04. 
