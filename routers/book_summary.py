@@ -18,26 +18,8 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def get_all(
-        page: int = 1,
-        reading_commitment_id: Optional[str] = None,
-        engine: AIOEngine = Depends(mongo_engine)
-):
-    skip: int = 50 * (page - 1)
-
-    queries = []
-
-    if reading_commitment_id:
-        qe = QueryExpression({'reading_commitment': ObjectId(reading_commitment_id)})
-        queries.append(qe)
-
-    book_summaries = await engine.find(BookSummary, *queries, skip=skip, limit=50)
-    return book_summaries
-
-
 @router.get("/user")
-async def get_all_from_specific_user_reading_commitment(
+async def get_all_within_user_reading_commitment(
         reading_commitment_id: str,
         page: int = 1,
         owner: User = Depends(get_current_user),
@@ -70,7 +52,7 @@ async def get_all_from_specific_user_reading_commitment(
 async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
     book_summary = await engine.find_one(BookSummary, BookSummary.id == id)
     if book_summary is None:
-        raise HTTPException(404)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return book_summary
 
 
@@ -81,7 +63,6 @@ async def create(
         owner: User = Depends(get_current_user),
         engine: AIOEngine = Depends(mongo_engine)
 ):
-
     reading_commitment = await engine.find_one(
         ReadingCommitment,
         ReadingCommitment.id == ObjectId(reading_commitment_id),
@@ -89,7 +70,7 @@ async def create(
     )
 
     if reading_commitment is None:
-        raise HTTPException(404)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     creation_date = datetime.utcnow()
 
@@ -116,7 +97,7 @@ async def update(
     )
 
     if book_summary is None:
-        raise HTTPException(404)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     reading_commitment = await engine.find_one(
         ReadingCommitment,
@@ -146,7 +127,7 @@ async def delete(
     )
 
     if book_summary is None:
-        raise HTTPException(404)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     reading_commitment = await engine.find_one(
         ReadingCommitment,
@@ -158,3 +139,27 @@ async def delete(
 
     await engine.delete(book_summary)
     return book_summary
+
+
+# ENDPOINT FOR DEBUGGING
+
+# @router.get("/")
+# async def get_all(page: int = 1, reading_commitment_id: Optional[str] = None, engine: AIOEngine = Depends(mongo_engine)):
+#     skip: int = 50 * (page - 1)
+#
+#     queries = []
+#
+#     if reading_commitment_id:
+#         qe = QueryExpression({'reading_commitment': ObjectId(reading_commitment_id)})
+#         queries.append(qe)
+#
+#     book_summaries = await engine.find(BookSummary, *queries, skip=skip, limit=50)
+#     return book_summaries
+#
+#
+# @router.put("/create_dummy", response_model=BookSummary)
+# async def create_dummy(book_summary: BookSummary, engine: AIOEngine = Depends(mongo_engine)):
+#     await engine.save(book_summary)
+#     return book_summary
+
+# WHILE DEBUGGING, DELETE DATA DIRECTLY FROM DATABASE FOR CONVENIENCE

@@ -14,6 +14,7 @@ class ReadingCommitment(Model, ABC):
     partner: Optional[User] = None
     creation_date: datetime
     end_date: datetime
+    owner_reading_cluster: Optional[int] = None
     book: Book = Reference()
 
 
