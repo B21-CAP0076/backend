@@ -1,8 +1,7 @@
-from typing import Optional
 from jose import JWTError, jwt
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from odmantic import AIOEngine
+from odmantic import AIOEngine, ObjectId
 from odmantic.query import QueryExpression
 from starlette.responses import JSONResponse
 
@@ -83,24 +82,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme), engine: AIOEngin
 @router.get("/me")
 async def me(current_user: User = Depends(get_current_user)):
     return current_user
-
-
-@router.get("/")
-async def get_all(
-        page: int = 1,
-        reading_cluster: Optional[int] = None,
-        engine: AIOEngine = Depends(mongo_engine)
-):
-    skip: int = 50 * (page - 1)
-
-    queries = []
-
-    if reading_cluster:
-        qe = QueryExpression({'reading_cluster': reading_cluster})
-        queries.append(qe)
-
-    users = await engine.find(User, *queries, skip=skip, limit=50)
-    return users
 
 
 @router.patch("/update")
@@ -248,3 +229,38 @@ def encode_genre(user_genre_pref, genre_list_db):
         combined_genre = np.add(combined_genre, encoded_genre)
 
     return combined_genre
+
+
+
+# ENDPOINT FOR DEBUGGING
+
+# @router.get("/")
+# async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
+#     skip: int = 50 * (page - 1)
+#
+#     users = await engine.find(User, skip=skip, limit=50)
+#     return users
+#
+#
+# @router.put("/create_dummy", response_model=User)
+# async def create_dummy(user: User, engine: AIOEngine = Depends(mongo_engine)):
+#     await engine.save(user)
+#     return user
+#
+#
+# @router.patch("/update_dummy/{id}")
+# async def update_dummy(id: str, patch: UserUpdate, engine: AIOEngine = Depends(mongo_engine)):
+#     user = await engine.find_one(User, User.id == ObjectId(id))
+#
+#     if user is None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+#
+#     patch_dict = patch.dict(exclude_unset=True)
+#     for name, value in patch_dict.items():
+#         setattr(user, name, value)
+#
+#     await engine.save(user)
+#     return user
+
+
+# WHILE DEBUGGING, DELETE DATA DIRECTLY FROM DATABASE FOR CONVENIENCE
