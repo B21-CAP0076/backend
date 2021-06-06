@@ -100,6 +100,12 @@ async def create(
         owner: User = Depends(get_current_user),
         engine: AIOEngine = Depends(mongo_engine)
 ):
+    if owner.reading_cluster is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User.reading_cluster is none, predict User.reading_cluster using machine learning first"
+        )
+
     creation_date = datetime.utcnow()
 
     reading_commitment = ReadingCommitment(
