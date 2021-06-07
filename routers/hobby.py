@@ -14,11 +14,7 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(
-        page: int = 1,
-        name: Optional[str] = None,
-        engine: AIOEngine = Depends(mongo_engine)
-):
+async def get_all(page: int = 1, name: Optional[str] = None, engine: AIOEngine = Depends(mongo_engine)):
     queries = []
     if name:
         qe = QueryExpression({'name': {'$regex': name, '$options': 'i'}})
