@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from jose import JWTError, jwt
-from odmantic import AIOEngine, ObjectId
+from odmantic import AIOEngine
 from starlette.responses import JSONResponse
 
 from choice.education import EducationChoice
@@ -120,28 +120,22 @@ async def predict_user_cluster(user: User = Depends(get_current_user), engine: A
     # Preprocess user data section
 
     if user is None:
-        raise HTTPException(404)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     # Check user.age == isNotNull ? continue : raise error (age need to be filled first)
     if user.age is None:
-        return {
-            'isPredicted': False,
-            'message': 'Data umur kosong. Silahkan isi umur terlebih dahulu.'
-        }
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User.age is null, fill it first")
 
     # Check user.education == isNotNull ? continue : raise error (education need to be filled first)
     if user.education is None:
-        return {
-            'isPredicted': False,
-            'message': 'Data pendidikan kosong. Silahkan isi pendidikan terlebih dahulu.'
-        }
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User.education is null, fill it first")
 
     # Check user.genre_preferences == isNotNull ? continue : raise error (genre preference need to be filled first)
     if user.genre_preferences is None:
-        return {
-            'isPredicted': False,
-            'message': 'Data preferensi genre buku kosong. Silahkan isi preferensi genre buku terlebih dahulu.'
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User.genre_preferences is null, fill it first"
+        )
 
     # Change age to np array
     user_age = np.array([[user.age]])
@@ -158,7 +152,7 @@ async def predict_user_cluster(user: User = Depends(get_current_user), engine: A
     combined_user_data_np = np.concatenate((user_age[0], user_edu_encoded[0], user_genre_encoded[0]))
     combined_user_data_tensor = tf.convert_to_tensor([combined_user_data_np])
 
-    ae_model = tf.keras.models.load_model('ml-assets/habitech_autoencoder')
+    ae_model = tf.keras.models.load_model('ml-assets/habitech_autoencoder.h5')
     ae_result = ae_model.predict(combined_user_data_tensor)
 
     # Pass embedded data to UMAP
@@ -178,10 +172,7 @@ async def predict_user_cluster(user: User = Depends(get_current_user), engine: A
     setattr(user, 'reading_cluster', cluster_predicted[0])
     await engine.save(user)
 
-    return {
-        'isPredicted': True,
-        'userData': user
-    }
+    return user
 
 
 def encode_education(user_edu):
@@ -214,7 +205,6 @@ def encode_genre(user_genre_pref, genre_list_db):
         combined_genre = np.add(combined_genre, encoded_genre)
 
     return combined_genre
-
 
 # ENDPOINT FOR DEBUGGING
 
