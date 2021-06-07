@@ -5,9 +5,9 @@ from odmantic import Model
 from pydantic import BaseModel, EmailStr
 
 from choice.education import EducationChoice
-from models.hobby import Hobby
 from models.book import Book
 from models.genre import Genre
+from models.hobby import Hobby
 
 
 # For get and put

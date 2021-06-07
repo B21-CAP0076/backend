@@ -1,9 +1,7 @@
 from typing import Optional
 
-from fastapi import Request, HTTPException
-from odmantic import AIOEngine
+from fastapi import Request, HTTPException, status
 from fastapi.security.oauth2 import OAuth2, OAuthFlowsModel, get_authorization_scheme_param
-from starlette import status
 
 
 class OAuth2ClientTokenBearer(OAuth2):

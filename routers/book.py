@@ -1,4 +1,3 @@
-import re
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -15,11 +14,7 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all(
-        page: int = 1,
-        title: Optional[str] = None,
-        engine: AIOEngine = Depends(mongo_engine)
-):
+async def get_all(page: int = 1, title: Optional[str] = None, engine: AIOEngine = Depends(mongo_engine)):
     skip: int = 50 * (page - 1)
 
     queries = []

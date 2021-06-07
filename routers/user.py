@@ -1,29 +1,23 @@
-from jose import JWTError, jwt
-
+import joblib
+import numpy as np
+import sklearn.preprocessing as prep
+import tensorflow as tf
+import umap
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from google.auth.transport import requests
+from google.oauth2 import id_token
+from jose import JWTError, jwt
 from odmantic import AIOEngine, ObjectId
-from odmantic.query import QueryExpression
 from starlette.responses import JSONResponse
 
-from google.oauth2 import id_token
-from google.auth.transport import requests
-
+from choice.education import EducationChoice
 from config import settings
 from db.mongodb import mongo_engine
-from models.user import User, UserUpdate
-from models.reading_commitment import ReadingCommitment
 from models.book_summary import BookSummary
-from models.swipe import Swipe
-
-# Packages needed for ML
 from models.genre import Genre
-from choice.education import EducationChoice
-import sklearn.preprocessing as prep
-import numpy as np
-import tensorflow as tf
-import joblib
-import umap
-
+from models.match import Match
+from models.reading_commitment import ReadingCommitment
+from models.user import User, UserUpdate
 from util.oauth2 import OAuth2ClientTokenBearer
 
 router = APIRouter(
@@ -74,7 +68,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), engine: AIOEngin
     user = await engine.find_one(User, User.email == payload["email"])
 
     if user is None:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     return user
 
@@ -96,30 +90,21 @@ async def update(patch: UserUpdate, user: User = Depends(get_current_user), engi
 @router.delete("/delete")
 async def delete(user: User = Depends(get_current_user), engine: AIOEngine = Depends(mongo_engine)):
     # delete all related data
-    user_reading_commitment = await engine.find(ReadingCommitment, ReadingCommitment.owner == user.id)
+    referenced_reading_commitment = await engine.find(ReadingCommitment, ReadingCommitment.owner == user.id)
 
-    for rc in user_reading_commitment:
+    for rc in referenced_reading_commitment:
         referenced_book_summary = await engine.find(BookSummary, BookSummary.reading_commitment == rc.id)
         for bs in referenced_book_summary:
             await engine.delete(bs)
 
-        referenced_swipe = await engine.find(
-            Swipe,
-            (Swipe.commitment_1 == rc.id) | (Swipe.commitment_2 == rc.id)
+        referenced_match = await engine.find(
+            Match,
+            (Match.commitment_1 == rc.id) | (Match.commitment_2 == rc.id)
         )
-        for s in referenced_swipe:
-            await engine.delete(s)
+        for m in referenced_match:
+            await engine.delete(m)
 
         await engine.delete(rc)
-
-    # change partner data
-    query = QueryExpression({"partner.id": user.id})
-
-    partner_reading_commitment = await engine.find(ReadingCommitment, query)
-    for rc in partner_reading_commitment:
-        partner_field = "partner"
-        setattr(rc, partner_field, None)
-        await engine.save(rc)
 
     # delete user
     await engine.delete(user)
@@ -231,15 +216,21 @@ def encode_genre(user_genre_pref, genre_list_db):
     return combined_genre
 
 
-
 # ENDPOINT FOR DEBUGGING
 
 # @router.get("/")
 # async def get_all(page: int = 1, engine: AIOEngine = Depends(mongo_engine)):
 #     skip: int = 50 * (page - 1)
-#
 #     users = await engine.find(User, skip=skip, limit=50)
 #     return users
+#
+#
+# @router.get("/{id}")
+# async def get(id: ObjectId, engine: AIOEngine = Depends(mongo_engine)):
+#     user = await engine.find_one(User, User.id == id)
+#     if user is None:
+#         return HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+#     return user
 #
 #
 # @router.put("/create_dummy", response_model=User)
@@ -262,5 +253,4 @@ def encode_genre(user_genre_pref, genre_list_db):
 #     await engine.save(user)
 #     return user
 
-
-# WHILE DEBUGGING, DELETE DATA DIRECTLY FROM DATABASE FOR CONVENIENCE
+# WHILE DEBUGGING, DELETE DATA DIRECTLY FROM DATABASE
