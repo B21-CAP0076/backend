@@ -19,8 +19,8 @@ Greg - C0101013@bangkit.academy
 ```
 
 ## Endpoints
-Backend endpoint docs: http://habitbangkit.tech:8080/docs <br/>
-Alternative docs: http://habitbangkit.tech:8080/redoc <br/>
+Backend endpoint docs: https://api.habitbangkit.tech/docs <br/>
+Alternative docs: https://api.habitbangkit.tech/redoc <br/>
 
 
 ## LOCAL Setup: how to run
