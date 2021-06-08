@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from odmantic import AIOEngine, ObjectId, query
 
 from choice.match import MatchStatus, MatchAction
@@ -23,7 +23,6 @@ async def matchmaking(
         engine: AIOEngine = Depends(mongo_engine),
         owner: User = Depends(get_current_user)
 ):
-
     match = await engine.find_one(
         Match,
         Match.commitment_1 == commitment_1_id,
@@ -71,8 +70,8 @@ async def get_all_user_match(owner: User = Depends(get_current_user), engine: AI
 
     match = await engine.find(
         Match,
-        (query.in_(Match.commitment_1, reading_commitment_ids)) | (
-            query.in_(Match.commitment_2, reading_commitment_ids))
+        (((query.in_(Match.commitment_1, reading_commitment_ids))
+         | (query.in_(Match.commitment_2, reading_commitment_ids))) & query.eq(Match.status, MatchStatus.MATCH))
     )
 
     return match
