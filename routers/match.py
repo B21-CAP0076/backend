@@ -20,8 +20,7 @@ async def matchmaking(
         commitment_1_id: ObjectId,
         commitment_2_id: ObjectId,
         action: MatchAction,
-        engine: AIOEngine = Depends(mongo_engine),
-        owner: User = Depends(get_current_user)
+        engine: AIOEngine = Depends(mongo_engine)
 ):
     match = await engine.find_one(
         Match,
