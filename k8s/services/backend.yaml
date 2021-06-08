@@ -2,9 +2,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: habit-backend
+  namespace: production
 spec:
-  type: LoadBalancer
-  loadBalancerIP: "34.126.96.253"
+  type: NodePort
   ports:
   - name: http
     port: 8080

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: habit-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "habit-global-ip"
+spec:
+  rules:
+  - host: "api.habitbangkit.tech"
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service: 
+            name: habit-backend
+            port:
+              number: 8080
+
