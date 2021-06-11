@@ -1,5 +1,8 @@
 # HABITECH - Habit App
 
+## Notes to reviewer
+In order to review this backend, please kindly contact Setiaki (A0101049@bangkit.academy). We will turn off our server and database temporarily due to limited Google Cloud quota and Google Auth access.
+
 ## What is this project about?
 ```
 This repository is the backend of our habit app. The technology used is listed below:
@@ -8,8 +11,6 @@ This repository is the backend of our habit app. The technology used is listed b
 3. Machine Learning: **TODO: describe**
 4. Cloud: **jenkins, k8s, many more**. We mirror this repository to Google Source Repository and use Jenkins to manage our CD. For now, only `canary` and `master` branch will be deployed to GKE upon running `push`.
 ```
-## Notes to reviewer
-In order to review this backend, please kindly contact Setiaki (A0101049@bangkit.academy). We will turn off our server and database temporarily due to limited Google Cloud quota and Google Auth access.
 
 ## Who are we?
 ```
