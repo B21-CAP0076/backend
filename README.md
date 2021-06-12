@@ -6,7 +6,7 @@ This repository is the backend of our habit app. The technology used is listed b
 1. Software stack: **Python-FastAPI**. This is a a REST framework that can make backend endpoints become easier to develop.
 2. Database: **mongodb**. Mongodb is a non-sql database, we use JSON-like data entry to store all of our user data.
 3. Machine Learning: **TODO: describe**
-4. Cloud: **jenkins, k8s, many more**. We mirror this repository to Google Source Repository and use Jenkins to manage our CD. For now, only `canary` and `master` branch will be deployed to GKE upon running `push`.
+4. Cloud: **jenkins, k8s, many more**. We mirror this repository to Google Source Repository and use Jenkins to manage our CD. For now, only `canary` and `master` branch will be deployed to GKE upon running `git push`.
 ```
 
 ## Who are we?
