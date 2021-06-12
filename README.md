@@ -18,6 +18,7 @@ Alka - M0101050@bangkit.academy
 Greg - C0101013@bangkit.academy
 ```
 
+
 ## Endpoints
 Backend endpoint docs: https://api.habitbangkit.tech/docs <br/>
 Alternative docs: https://api.habitbangkit.tech/redoc <br/>
